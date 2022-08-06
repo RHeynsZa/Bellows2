@@ -1,0 +1,38 @@
+{
+	"Bellows": {
+		"ImportPlaylist": {
+			"Title": "YouTubeのプレイリストを読み込む",
+			"Notes": "YouTubeのプレイリストURL、またはIDを入力してください。隣のインポートボタンを押すと開始します。",
+			"Buttons": {
+				"Import": "インポート",
+				"Submit": "保存"
+			},
+			"Messages": {
+				"AlreadyWorking": "プレイリストをインポートしています。しばらくお待ちください。",
+				"InvalidKey": "有効なYouTubeのプレイリストURL（クエリ文字列を含む）、またはプレイリストIDを入力してください。",
+				"Error": "プレイリスト読込エラー：詳細はコンソールを確認してください。",
+				"KeyNotFound": "キー {playlistKey} を持つプレイリストが存在しません。URLやIDを確認し再試行してください。",
+				"ImportComplete": "プレイリスト {playlistName} が正常にインポートされました。"
+			},
+			"Labels": {
+				"Name": "プレイリスト名",
+				"Volume": "デフォルト音量"
+			}
+		},
+		"PlaylistConfig": {
+			"Labels": {
+				"Streamed": "ストリーム",
+				"StreamType": "ストリームタイプ",
+				"AudioUrl": "ストリームURL/Id"
+			},
+			"Selects": {
+				"StreamTypes": {
+					"Youtube": "YouTube"
+				}
+			},
+			"Errors": {
+				"InvalidUri": "無効なURIが指定されました"
+			}
+		}
+	}
+}
