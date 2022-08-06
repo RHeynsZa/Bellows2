@@ -39,5 +39,5 @@
         "webpack-dev-server": "^3.11.2",
         "webpack-import-glob-loader": "^1.6.3"
     },
-    "version": "2.0.0"
+    "version": "2.0.1"
 }
