@@ -87,7 +87,11 @@ export class YoutubeIframeApi {
                 resolve(player);
             };
 
-            $("body").append(`<div class="yt-player" id="${playerId}"></div>`);
+            $("body").append(`<div style="position: absolute;
+                                width:0;
+                                height:0;
+                                border:0;
+                                display: none;" id="${playerId}"></div>`);
 
             const player: YT.Player = new YT.Player(playerId, {
                 height: "270px",
@@ -95,7 +99,10 @@ export class YoutubeIframeApi {
                 videoId: videoId,
                 playerVars: {
                     loop: 1, //we set this to 1 to prevent iframe reloading when loop is changed
-                    playlist: videoId
+                    playlist: videoId,
+                    controls: 0,
+                    autohide: 1,
+                    origin: window.location.origin,
                 },
                 events: {
                     "onReady": onPlayerReadyCallback.bind(this),
@@ -144,7 +151,11 @@ export class YoutubeIframeApi {
                 resolve(player);
             };
 
-            $("body").append(`<div class="yt-player" id="${playerId}"></div>`);
+            $("body").append(`<div style="position: absolute;
+                                width:0;
+                                height:0;
+                                border:0;
+                                display: none;" id="${playerId}"></div>`);
 
             //@ts-ignore missing yt types
             const player: YT.Player = new YT.Player(playerId, {
@@ -152,7 +163,10 @@ export class YoutubeIframeApi {
                 width: "480px",
                 playerVars: {
                     listType: "playlist",
-			        list: playlistId
+                    list: playlistId,
+                    controls: 0,
+                    autohide: 1,
+                    origin: window.location.origin,
                 },
                 events: {
                     "onReady": onPlayerReadyCallback.bind(this),

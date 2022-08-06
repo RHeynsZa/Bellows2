@@ -1,12 +1,10 @@
-import { PlayerState } from "../../../types/streaming/youtube";
 import { YoutubePlaylistItem } from "../../models/YoutubePlaylistItem";
-import Logger from "../../helper/Utils";
 import { YoutubeIframeApi } from "../../api/YoutubeIframeApi";
 import { StreamType } from "../../../types/streaming/streamType";
 
 export class YouTubePlaylistImportService {
 
-	private _player: YT.Player | undefined;
+    private _player: YT.Player | undefined;
 
 	extractPlaylistKey(playlistString) {
 		//YouTube url (any string with a list querystring var)
@@ -37,7 +35,7 @@ export class YouTubePlaylistImportService {
 
 		this._player = await api.createPlaylistPlayer(-1, playlistKey);
 
-		try {
+        try {
 			return await this.scrapeVideoNames();
 		} finally {
 			api.destroyPlayer(-1, playlistKey);
@@ -72,68 +70,84 @@ export class YouTubePlaylistImportService {
 				}
 			});
 		}
-
-		await playlist?.createEmbeddedEntity("PlaylistSound", playlistSounds);
+        // @ts-ignore
+        await playlist?.createEmbeddedDocuments("PlaylistSound", playlistSounds);
 	}
 
-	async scrapeVideoNames(): Promise<YoutubePlaylistItem[]> {
-		if (!this._player?.getPlaylist()) {
+    async scrapeVideoNames(): Promise<YoutubePlaylistItem[]> {
+        const scrapedTracks: YoutubePlaylistItem[] = [];
+        const playlist = this._player?.getPlaylist(); // return array of ids
+        if (!playlist) {
 			throw new Error("Invalid Playlist");
 		}
 
-		const scrapedTracks: YoutubePlaylistItem[] = [];
+        let title = "";
+        const callBackFunc = (e) => {
+            //@ts-ignore -- missing from yt types
+            const loadedTitle = e.target.getVideoData().title;
+            if (loadedTitle) {
+                title = loadedTitle;
+            }
+        };
+        this._player?.addEventListener("onStateChange", callBackFunc);
 
-		for (let f = 0; f < 3; f++) {
-			try {
-				await this.getTrack(0);
-				break;
-			} catch (ex) {
-				if (f == 2) {
-					throw ex;
-				}
-				Logger.LogDebug(`getNextTrack timed out, retrying...`);
-			}
+        const option = '2';
+        for (let i = 0; i < playlist.length; i++) {
+            console.log(`Scraping ${i}`);
+            const id = playlist[i];
+            this._player?.playVideoAt(i);
+            let timeout = 0;
+            // Issue is, we cant remove the event listener, so we cant await, resolve, and add a new listener
+            // so we have a few options of how to handle this
+            // I chose option 2 since it is faster, but this could probably be improved
+            switch (option) {
+                // Option 1: We use the onStateChange event to get the title, but since we can't await, we have to use a timeout
+                // @ts-ignore
+                case '1':
+                    await new Promise<void>((resolve) => {
+                        // Wait for the title to be loaded
+                        setTimeout(() => {
+                            resolve();
+                        }, 1000);
+                    }).then(() => {
+                        if (title) {
+                            scrapedTracks.push({
+                                id,
+                                title
+                            });
+                            console.log(`Scraped ${i}: ${title}`);
+                        } else {
+                            console.log(`Scraped ${i}: Could not find title in 1 second, skipping`);
+                        }
+                        title = "";
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                    break;
+                case '2':
+                    // Option 2: We just wait for the title to load, with a while loop
+                    // And timeout if it takes too long, after 10 seconds
+                    while (!title && timeout < 50) {
+                        await new Promise<void>((resolve) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, 100);
+                        });
+                        timeout++;
+                    }
+                    if (title) {
+                        scrapedTracks.push({
+                            id,
+                            title
+                        });
+                        console.log(`Scraped ${i}: ${title}`);
+                    } else {
+                        console.log(`Scraped ${i}: Could not find title in 5 seconds, skipping`);
+                    }
+                    title = "";
+                    break;
+            }
 		}
-
-		for (let i = 0; i < this._player.getPlaylist().length; i++) {
-
-			await this.getTrack(i);
-
-			//@ts-ignore -- getvideodata missing in yt types
-			const data = this._player.getVideoData();
-			scrapedTracks.push({
-				id: data.video_id,
-				title: data.title
-			});
-		}
-
-		return scrapedTracks;
-	}
-
-	async getTrack(idx) {
-		const playVideo = new Promise((resolve) => {
-
-			this._player?.addEventListener<YT.OnStateChangeEvent>("onStateChange", e => {
-				if (e.data as unknown as PlayerState == PlayerState.UNSTARTED) {
-					//@ts-ignore -- missing from yt types
-					e.target.removeEventListener("onStateChange");
-					resolve(e.data);
-				}
-			});
-
-			this._player?.playVideoAt(idx);
-		});
-
-		const timeout = new Promise((_resolve, reject) => {
-			const id = setTimeout(() => {
-				clearTimeout(id);
-				reject("timed out");
-			}, 1000);
-		});
-
-		return Promise.race([
-			playVideo,
-			timeout
-		]);
+        return scrapedTracks;
 	}
 }

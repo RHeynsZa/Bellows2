@@ -2,7 +2,6 @@
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const globImporter = require("node-sass-glob-importer");
 const path = require("path");
 const glob = require("glob");
 
@@ -23,7 +22,7 @@ module.exports = (env) => {
     const isDevelopment = environment.mode === "development";
 
     const config = {
-        entry: "./src/bellows.ts",
+        entry: "./src/bellows2.ts",
         watch: environment.watch,
         devtool: "inline-source-map",
         stats: "minimal",
@@ -32,7 +31,8 @@ module.exports = (env) => {
             extensions: [".wasm", ".mjs", ".ts", ".js", ".json"],
         },
         output: {
-            filename: "bellows.js",
+            filename: "bellows2.js",
+            // So you can set this path to your local modules, and when the app is running, it will hot swap
             path: path.resolve(__dirname, "dist"),
             publicPath: '',
         },
@@ -84,15 +84,6 @@ module.exports = (env) => {
                             options: {
                                 sourceMap: isDevelopment,
                                 url: false,
-                            },
-                        },
-                        {
-                            loader: "sass-loader",
-                            options: {
-                                sourceMap: isDevelopment,
-                                sassOptions: {
-                                    importer: globImporter(),
-                                },
                             },
                         },
                     ],

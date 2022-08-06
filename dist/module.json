@@ -1,47 +1,46 @@
 {
-  "name": "bellows",
-  "title": "Bellows",
-  "description": "A music streaming module for Foundry VTT. Every forge needs bellows!",
-  "version": "This is auto replaced",
-  "library": "false",
-  "manifestPlusVersion": "1.0.0",
-  "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "0.8.8",
-  "authors": [
-    {
-      "name": "casualchameleon",
-      "url": "https://github.com/casualchameleon",
-      "discord": "casualchameleon#6618"
-    }
-  ],
-  "dependencies": [
-
-  ],
-  "conflicts": [
-
-  ],
-  "esmodules": [
-    "bellows.js"
-  ],
-  "scripts": [
-  
-  ],
-  "styles": [
-    "/styles/bellows.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    },
-    {
-      "lang": "es",
-      "name": "Español",
-      "path": "languages/es.json"
-    }
-  ],
-  "url": "This is auto replaced",
-  "manifest": "This is auto replaced",
-  "download": "This is auto replaced"
+    "name": "bellows2",
+    "title": "Bellows 2 - Electric Boogaloo",
+    "description": "A music streaming module for Foundry VTT. Every forge needs bellows!",
+    "version": "This is auto replaced",
+    "library": "false",
+    "manifestPlusVersion": "1.0.0",
+    "minimumCoreVersion": "9",
+    "compatibleCoreVersion": "9",
+    "authors": [
+        {
+            "name": "RHeynsZA",
+            "url": "https://github.com/RHeynsZA",
+            "discord": "Padrone56#8198"
+        }
+    ],
+    "dependencies": [],
+    "conflicts": [],
+    "esmodules": [
+        "bellows2.js"
+    ],
+    "scripts": [],
+    "styles": [
+        "/styles/bellows2.css"
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "languages/en.json"
+        },
+        {
+            "lang": "es",
+            "name": "Español",
+            "path": "languages/es.json"
+        },
+        {
+            "lang": "ja",
+            "name": "日本語",
+            "path": "languages/ja.json"
+        }
+    ],
+    "url": "This is auto replaced",
+    "manifest": "This is auto replaced",
+    "download": "This is auto replaced"
 }
