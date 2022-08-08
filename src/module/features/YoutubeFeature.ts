@@ -6,7 +6,7 @@ export class YoutubeApiFeature {
     static hooks() {
         Hooks.once("init", async () => {
             Logger.LogDebug("Initializing YoutubeApi Feature");
-            
+
             await YoutubeIframeApi.initializeApi();
         });
 
@@ -19,12 +19,12 @@ export class YoutubeApiFeature {
                 <button class="import-yt-playlist">
                     <i class="fas fa-cloud-download-alt"></i> ${game.i18n.localize('Bellows.ImportPlaylist.Title')}
                 </button>`);
-                
+
             html.find(".directory-footer").append(importButton);
 
             importButton.on("click", () => {
                 new YoutubePlaylistImportForm({}, {}).render(true);
-            });	
+            });
         });
     }
 }
