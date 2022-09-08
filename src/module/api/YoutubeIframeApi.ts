@@ -21,7 +21,7 @@ export class YoutubeIframeApi {
             if (!$("#yt-api-script").length) {
                 const tag = document.createElement("script");
                 tag.id = "yt-api-script";
-                tag.src = "https://www.youtube.com/iframe_api";
+                tag.src = `${window.location.protocol}//www.youtube.com/iframe_api`;
                 tag.type = "text/javascript";
 
                 const firstScriptTag = document.getElementsByTagName("script")[0];
@@ -58,7 +58,7 @@ export class YoutubeIframeApi {
         return new Promise<YT.Player>((resolve, reject) => {
             const onPlayerError = function (event: YT.OnErrorEvent) {
                 let errorMessage: string;
-                const data = event.data as unknown as PlayerError;
+                const data = Number(event.data) as unknown as PlayerError;
                 switch (data) {
                     case PlayerError.InvalidParam:
                         errorMessage = "Invalid videoId value.";
@@ -76,7 +76,7 @@ export class YoutubeIframeApi {
                     default:
                         errorMessage = "Unspecified Error";
                 }
-
+                console.error(`Error creating Youtube player: ${errorMessage}`);
                 reject(errorMessage);
             };
 
@@ -94,14 +94,13 @@ export class YoutubeIframeApi {
                                 display: none;" id="${playerId}"></div>`);
 
             const player: YT.Player = new YT.Player(playerId, {
-                height: "270px",
-                width: "480px",
                 videoId: videoId,
                 playerVars: {
                     loop: 1, //we set this to 1 to prevent iframe reloading when loop is changed
                     playlist: videoId,
                     controls: 0,
-                    autohide: 1,
+                    disablekb: 1,
+                    enablejsapi: 1,
                     origin: window.location.origin,
                 },
                 events: {

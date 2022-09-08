@@ -147,6 +147,8 @@ export class YoutubeStreamSound implements Sound {
             await this.loading;
         }
 
+        // Lets just wait to make sure the player is ready
+        await new Promise(resolve => setTimeout(resolve, 500));
         //Grab player
         if (!this._player) {
             this.loading = YoutubeIframeApi.getInstance().createPlayer(this.id, this.src);
@@ -155,7 +157,7 @@ export class YoutubeStreamSound implements Sound {
             }).catch(reason => {
                 Logger.LogError(`Failed to load track ${this.src} - ${reason}`);
             }).finally(() => {
-                this.loading = undefined;
+                this.loading = new Promise(resolve => setTimeout(resolve, 1000));
             });
         }
 
