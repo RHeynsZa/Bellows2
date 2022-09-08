@@ -58,7 +58,7 @@ export class YoutubeIframeApi {
         return new Promise<YT.Player>((resolve, reject) => {
             const onPlayerError = function (event: YT.OnErrorEvent) {
                 let errorMessage: string;
-                const data = event.data as unknown as PlayerError;
+                const data = Number(event.data) as unknown as PlayerError;
                 switch (data) {
                     case PlayerError.InvalidParam:
                         errorMessage = "Invalid videoId value.";

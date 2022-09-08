@@ -62,7 +62,7 @@ class YoutubeIframeApi {
         return new Promise((resolve, reject) => {
             const onPlayerError = function (event) {
                 let errorMessage;
-                const data = event.data;
+                const data = Number(event.data);
                 switch (data) {
                     case 2 /* PlayerError.InvalidParam */:
                         errorMessage = "Invalid videoId value.";
@@ -624,6 +624,8 @@ class YoutubeStreamSound {
         if (this.loading instanceof Promise) {
             await this.loading;
         }
+        // Lets just wait to make sure the player is ready
+        await new Promise(resolve => setTimeout(resolve, 500));
         //Grab player
         if (!this._player) {
             this.loading = YoutubeIframeApi.getInstance().createPlayer(this.id, this.src);
@@ -632,7 +634,7 @@ class YoutubeStreamSound {
             }).catch(reason => {
                 Utils.LogError(`Failed to load track ${this.src} - ${reason}`);
             }).finally(() => {
-                this.loading = undefined;
+                this.loading = new Promise(resolve => setTimeout(resolve, 1000));
             });
         }
         await this.loading;
