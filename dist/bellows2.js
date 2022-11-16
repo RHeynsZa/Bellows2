@@ -906,10 +906,10 @@ class PlaylistSoundPatch {
     static patch() {
         const createSoundFunction = PlaylistSound.prototype._createSound;
         PlaylistSound.prototype._createSound = function () {
-            if (!hasProperty(this, "data.flags.bIsStreamed") || !this.data.flags.bIsStreamed) {
+            if (!hasProperty(this, "flags.bIsStreamed") || !this.flags.bIsStreamed) {
                 return createSoundFunction.apply(this);
             }
-            const sound = StreamSoundFactory.getStreamSound(this.data.flags.streamingApi, this.data.flags.streamingId);
+            const sound = StreamSoundFactory.getStreamSound(this.flags.streamingApi, this.flags.streamingId);
             sound.on("start", this._onStart.bind(this));
             sound.on("end", this._onEnd.bind(this));
             sound.on("stop", this._onStop.bind(this));
